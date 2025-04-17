@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Your Cart</h1>
+    
+    <div id="cart-items" class="mt-4">
+        <!-- Cart items will be populated by JavaScript -->
+    </div>
+    
+    <div class="text-end mt-4">
+        <a href="{% url 'menu' %}" class="btn btn-outline-primary">Continue Shopping</a>
+        <a href="{% url 'checkout' %}" id="checkout-btn" class="btn btn-success d-none">Proceed to Checkout</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Load cart from localStorage
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || {};
+            const cartItems = $('#cart-items');
+            cartItems.empty();
+            
+            if (Object.keys(cart).length === 0) {
+                cartItems.html('<div class="alert alert-info">Your cart is empty. <a href="' + '{% url "menu" %}' + '">Browse our menu</a> to add items.</div>');
+                $('#checkout-btn').addClass('d-none');
+                return;
+            }
+            
+            // Create cart table
+            let table = `
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            let total = 0;
+            
+            for (const id in cart) {
+                const item = cart[id];
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                
+                table += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>₹${item.price}</td>
+                        <td>
+                            <div class="input-group input-group-sm w-75">
+                                <button class="btn btn-outline-secondary decrement-item" type="button" data-id="${id}">-</button>
+                                <input type="text" class="form-control text-center item-quantity" value="${item.quantity}" readonly>
+                                <button class="btn btn-outline-secondary increment-item" type="button" data-id="${id}">+</button>
+                            </div>
+                        </td>
+                        <td>₹${subtotal.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger remove-item" data-id="${id}">Remove</button>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            table += `
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="text-end">Total:</th>
+                            <th>₹${total.toFixed(2)}</th>
+                            <th>
+                                <button class="btn btn-sm btn-warning" id="clear-cart">Clear Cart</button>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            `;
+            
+            cartItems.html(table);
+            $('#checkout-btn').removeClass('d-none');
+        }
+        
+        // Initial load
+        loadCart();
+        
+        // Event handlers
+        $(document).on('click', '.increment-item', function() {
+            const id = $(this).data('id');
+            const cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            if (cart[id]) {
+                cart[id].quantity += 1;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
+                updateCartCount();
+            }
+        });
+        
+        $(document).on('click', '.decrement-item', function() {
+            const id = $(this).data('id');
+            const cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            if (cart[id] && cart[id].quantity > 1) {
+                cart[id].quantity -= 1;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
+                updateCartCount();
+            }
+        });
+        
+        $(document).on('click', '.remove-item', function() {
+            const id = $(this).data('id');
+            const cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            if (cart[id]) {
+                delete cart[id];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
+                updateCartCount();
+            }
+        });
+        
+        $(document).on('click', '#clear-cart', function() {
+            localStorage.removeItem('cart');
+            loadCart();
+            updateCartCount();
+        });
+        
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || {};
+            let count = 0;
+            
+            for (const id in cart) {
+                count += cart[id].quantity;
+            }
+            
+            $('#cart-count').text(count);
+        }
+    });
+</script>
+{% endblock %}

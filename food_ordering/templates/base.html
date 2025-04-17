@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering - {% block title %}Home{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a class="logo" href="{% url 'home' %}">
+                    <i class="fas fa-utensils me-2"></i>
+                    Food Ordering
+                </a>
+                <div class="nav-links">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    <a class="nav-link" href="{% url 'menu' %}">Menu</a>
+                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="#">Contact</a>
+                </div>
+                <div class="d-flex align-items-center">
+                    <a class="nav-link me-3 position-relative" href="{% url 'cart' %}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
+                    </a>
+                    {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'order_history' %}">Order History</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a class="btn btn-primary" href="{% url 'login' %}">Sign In</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <a href="{% url 'home' %}" class="logo text-white mb-4 d-inline-block">Food Ordering</a>
+                    <p class="text-gray-400 mb-4">Order your favorite food online and have it delivered to your door.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-white mb-4">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'menu' %}">Menu</a></li>
+                        <li><a href="{% url 'cart' %}">Cart</a></li>
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'profile' %}">Profile</a></li>
+                        <li><a href="{% url 'order_history' %}">Order History</a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'register' %}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-white mb-4">Contact Us</h5>
+                    <address class="text-gray-400">
+                        <p><i class="fas fa-map-marker-alt me-2"></i> 123 Main Street, City</p>
+                        <p><i class="fas fa-phone me-2"></i> +1 234 567 8900</p>
+                        <p><i class="fas fa-envelope me-2"></i> info@foodordering.com</p>
+                    </address>
+                </div>
+            </div>
+            <hr class="border-gray-800 my-8">
+            <div class="text-center text-gray-500">
+                <p>&copy; {% now "Y" %} Food Ordering. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize cart count
+        $(document).ready(function() {
+            function updateCartCount() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || {};
+                let count = 0;
+                
+                for (const id in cart) {
+                    count += cart[id].quantity;
+                }
+                
+                $('#cart-count').text(count);
+            }
+            
+            updateCartCount();
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

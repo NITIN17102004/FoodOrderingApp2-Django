@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-4 mb-3">Your Order History</h1>
+            <p class="text-muted lead">Track all your delicious moments with us</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <img src="https://images.unsplash.com/photo-1484659619207-9165d119dafe" alt="Food Order" class="img-fluid rounded-circle shadow-sm" style="width: 100px; height: 100px; object-fit: cover;">
+        </div>
+    </div>
+
+    {% if orders %}
+    <div class="row">
+        {% for order in orders %}
+        <div class="col-12 mb-4">
+            <div class="card order-card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center mb-3 mb-md-0">
+                            <div class="order-number-circle">
+                                <span class="h4 mb-0">#{{ order.id }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="text-muted mb-1">Date</p>
+                            <p class="mb-0 fw-bold">{{ order.created_at|date:"F j, Y, g:i a" }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="text-muted mb-1">Total</p>
+                            <p class="mb-0 fw-bold">₹{{ order.total_amount }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="text-muted mb-1">Status</p>
+                            <span class="badge status-badge status-{{ order.status|lower }}">
+                                {{ order.status }}
+                            </span>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <a href="{% url 'order_detail' order.id %}" class="btn btn-primary btn-sm view-details-btn">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <img src="https://images.unsplash.com/photo-1495195134817-aeb325a55b65" alt="Empty Order History" 
+             class="img-fluid mb-4 rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover;">
+        <h3 class="text-muted">No Orders Yet</h3>
+        <p class="text-muted mb-4">Time to explore our delicious menu!</p>
+        <a href="{% url 'menu' %}" class="btn btn-primary">Browse Menu</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .order-card {
+        transition: transform 0.2s ease;
+        border-radius: 15px;
+    }
+    
+    .order-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .order-number-circle {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin: 0 auto;
+    }
+    
+    .status-badge {
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+    
+    .status-pending {
+        background-color: #fbbf24;
+        color: #92400e;
+    }
+    
+    .status-preparing {
+        background-color: #60a5fa;
+        color: #1e40af;
+    }
+    
+    .status-delivering {
+        background-color: #34d399;
+        color: #065f46;
+    }
+    
+    .status-delivered {
+        background-color: #10b981;
+        color: #064e3b;
+    }
+    
+    .status-cancelled {
+        background-color: #ef4444;
+        color: #7f1d1d;
+    }
+    
+    .view-details-btn {
+        border-radius: 20px;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .view-details-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    .display-4 {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        .order-number-circle {
+            width: 50px;
+            height: 50px;
+            font-size: 0.9rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}

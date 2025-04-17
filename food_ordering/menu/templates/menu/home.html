@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content" style="background-color: rgba(255, 255, 255, 0.2); padding: 2rem; border-radius: 10px;">
+            <h1 class="hero-title">Quick & Delicious Food Delivered to Your Door</h1>
+            <p class="hero-text">Order your favorite food from the comfort of your home and have it delivered in minutes.</p>
+            <div class="mt-4">
+                <a class="btn btn-primary" href="{% url 'menu' %}" role="button">Order Now</a>
+                <a class="btn btn-outline" href="{% url 'menu' %}" role="button">View Menu</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Featured Items -->
+    <section class="py-5">
+        <div class="text-center mb-5">
+            <h2 class="text-3xl font-bold">Featured Menu Items</h2>
+            <p class="text-gray-600">Discover our chef's special selection of dishes</p>
+        </div>
+        
+        <div class="row">
+            {% for item in featured_items %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-img-container">
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}" class="food-image" alt="{{ item.name }}">
+                        {% else %}
+                            {% if 'Pizza' in item.name %}
+                                {% if 'Margherita' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3" class="food-image" alt="{{ item.name }}">
+                                {% elif 'Pepperoni' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e" class="food-image" alt="{{ item.name }}">
+                                {% else %}
+                                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591" class="food-image" alt="{{ item.name }}">
+                                {% endif %}
+                            {% elif 'Burger' in item.name %}
+                                {% if 'Classic' in item.name or 'Cheese' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd" class="food-image" alt="{{ item.name }}">
+                                {% elif 'Veggie' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1525059696034-4967a8e1dca2" class="food-image" alt="{{ item.name }}">
+                                {% else %}
+                                <img src="https://images.unsplash.com/photo-1550317138-10000687a72b" class="food-image" alt="{{ item.name }}">
+                                {% endif %}
+                            {% elif 'Pasta' in item.name or 'Fettuccine' in item.name %}
+                                {% if 'Alfredo' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141" class="food-image" alt="{{ item.name }}">
+                                {% elif 'Arrabbiata' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1563379926898-05f457f41e1a" class="food-image" alt="{{ item.name }}">
+                                {% else %}
+                                <img src="https://images.unsplash.com/photo-1473093226795-af9932fe5856" class="food-image" alt="{{ item.name }}">
+                                {% endif %}
+                            {% elif 'Butter Chicken' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398" class="food-image" alt="{{ item.name }}">
+                            {% elif 'Paneer' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7" class="food-image" alt="{{ item.name }}">
+                            {% elif 'Dal' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d" class="food-image" alt="{{ item.name }}">
+                            {% elif 'Surf and Turf' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1544025162-d76694265947" class="food-image" alt="{{ item.name }}">
+                            {% elif 'Salad' in item.name %}
+                                {% if 'Caesar' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1550304943-4f24f54ddde9" class="food-image" alt="{{ item.name }}">
+                                {% else %}
+                                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd" class="food-image" alt="{{ item.name }}">
+                                {% endif %}
+                            {% elif 'Chocolate' in item.name or 'Lava' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1624353365286-3f8d62daad51" class="food-image" alt="{{ item.name }}">
+                            {% elif 'Smoothie' in item.name %}
+                                <img src="https://images.unsplash.com/photo-1505252585461-04db1eb84625" class="food-image" alt="{{ item.name }}">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" class="food-image" alt="{{ item.name }}">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">{{ item.description|truncatechars:100 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="card-price">₹{{ item.price }}</span>
+                            <a href="{% url 'item_detail' item.id %}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    
+    <!-- Categories -->
+    <section class="py-5 bg-gray-50">
+        <div class="text-center mb-5">
+            <h2 class="text-3xl font-bold">Browse Categories</h2>
+            <p class="text-gray-600">Explore our wide range of cuisine categories</p>
+        </div>
+        
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if category.name == 'Pizza' %}
+                    <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3" class="category-image" alt="{{ category.name }}">
+                    {% elif category.name == 'Burger' %}
+                    <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd" class="category-image" alt="{{ category.name }}">
+                    {% elif category.name == 'Pasta' %}
+                    <img src="https://images.unsplash.com/photo-1473093226795-af9932fe5856" class="category-image" alt="{{ category.name }}">
+                    {% elif category.name == 'Indian Cuisine' %}
+                    <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe" class="category-image" alt="{{ category.name }}">
+                    {% elif category.name == 'Salad' %}
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd" class="category-image" alt="{{ category.name }}">
+                    {% elif category.name == 'Dessert' %}
+                    <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307" class="category-image" alt="{{ category.name }}">
+                    {% elif category.name == 'Beverage' %}
+                    <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e" class="category-image" alt="{{ category.name }}">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" class="category-image" alt="{{ category.name }}">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description|truncatechars:100 }}</p>
+                        <a href="{% url 'menu' %}?category={{ category.name }}" class="btn btn-outline">Browse</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

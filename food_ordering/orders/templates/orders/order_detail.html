@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'order_history' %}">Orders</a></li>
+                    <li class="breadcrumb-item active">Order #{{ order.id }}</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Order #{{ order.id }}</h4>
+                    <span class="order-date">{{ order.created_at|date:"F j, Y, g:i a" }}</span>
+                </div>
+                
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="order-info mb-4">
+                                <h5 class="text-primary mb-3"><i class="fas fa-info-circle me-2"></i>Order Information</h5>
+                                <div class="info-item mb-2">
+                                    <strong>Order ID:</strong> #{{ order.id }}
+                                </div>
+                                <div class="info-item mb-2">
+                                    <strong>Date:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}
+                                </div>
+                                <div class="info-item mb-2">
+                                    <strong>Delivery Address:</strong>
+                                    <p class="ms-3 mb-0 text-muted">{{ order.delivery_address|default:"Not provided" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="order-status mb-4">
+                                <h5 class="text-primary mb-3"><i class="fas fa-truck me-2"></i>Order Status</h5>
+                                <div class="status-timeline">
+                                    {% if order.status == 'pending' %}
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-clock me-2"></i>Order Pending
+                                            <small class="d-block text-muted">We're processing your order</small>
+                                        </div>
+                                    {% elif order.status == 'preparing' %}
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-utensils me-2"></i>Preparing
+                                            <small class="d-block text-muted">Your food is being prepared</small>
+                                        </div>
+                                    {% elif order.status == 'delivering' %}
+                                        <div class="alert alert-primary">
+                                            <i class="fas fa-motorcycle me-2"></i>Out for Delivery
+                                            <small class="d-block text-muted">Your order is on its way</small>
+                                        </div>
+                                    {% elif order.status == 'delivered' %}
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-check-circle me-2"></i>Delivered
+                                            <small class="d-block text-muted">Thank you for ordering!</small>
+                                        </div>
+                                    {% elif order.status == 'cancelled' %}
+                                        <div class="alert alert-danger">
+                                            <i class="fas fa-times-circle me-2"></i>Cancelled
+                                            <small class="d-block text-muted">This order has been cancelled</small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-items mt-4">
+                        <h5 class="text-primary mb-3"><i class="fas fa-shopping-basket me-2"></i>Order Items</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Item</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-end">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="ms-2">
+                                                    <h6 class="mb-0">{{ item.menu_item.name }}</h6>
+                                                    {% if item.menu_item.description %}
+                                                    <small class="text-muted">{{ item.menu_item.description|truncatechars:50 }}</small>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">₹{{ item.price }}</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-secondary">{{ item.quantity }}</span>
+                                        </td>
+                                        <td class="text-end">₹{{ item.subtotal }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                                        <td class="text-end"><strong>₹{{ order.total_amount }}</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'order_history' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Order History
+                        </a>
+                        {% if order.status == 'pending' %}
+                        <form method="post" action="#" class="m-0">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="cancel">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-times me-2"></i>Cancel Order
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.order-info .info-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-info .info-item:last-child {
+    border-bottom: none;
+}
+
+.status-timeline {
+    position: relative;
+}
+
+.alert {
+    margin-bottom: 0;
+    border-left: 4px solid;
+}
+
+.alert-warning {
+    border-left-color: #ffc107;
+}
+
+.alert-info {
+    border-left-color: #0dcaf0;
+}
+
+.alert-primary {
+    border-left-color: #0d6efd;
+}
+
+.alert-success {
+    border-left-color: #198754;
+}
+
+.alert-danger {
+    border-left-color: #dc3545;
+}
+
+.table > :not(caption) > * > * {
+    padding: 1rem 0.75rem;
+}
+</style>
+{% endblock %}

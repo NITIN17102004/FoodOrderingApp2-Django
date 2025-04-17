@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-img-container">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" class="food-image" alt="{{ item.name }}">
+                    {% else %}
+                        {% if 'Pizza' in item.name %}
+                            {% if 'Margherita' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3" class="food-image" alt="{{ item.name }}">
+                            {% elif 'Pepperoni' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e" class="food-image" alt="{{ item.name }}">
+                            {% else %}
+                            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591" class="food-image" alt="{{ item.name }}">
+                            {% endif %}
+                        {% elif 'Burger' in item.name %}
+                            {% if 'Classic' in item.name or 'Cheese' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd" class="food-image" alt="{{ item.name }}">
+                            {% elif 'Veggie' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1525059696034-4967a8e1dca2" class="food-image" alt="{{ item.name }}">
+                            {% else %}
+                            <img src="https://images.unsplash.com/photo-1550317138-10000687a72b" class="food-image" alt="{{ item.name }}">
+                            {% endif %}
+                        {% elif 'Pasta' in item.name or 'Fettuccine' in item.name %}
+                            {% if 'Alfredo' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141" class="food-image" alt="{{ item.name }}">
+                            {% elif 'Arrabbiata' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1595295333158-4742f28fbd85" class="food-image" alt="{{ item.name }}">
+                            {% else %}
+                            <img src="https://images.unsplash.com/photo-1473093226795-af9932fe5856" class="food-image" alt="{{ item.name }}">
+                            {% endif %}
+                        {% elif 'Butter Chicken' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1588166524941-3bf61a9c41db" class="food-image" alt="{{ item.name }}">
+                        {% elif 'Paneer Tikka Masala' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b" class="food-image" alt="{{ item.name }}">
+                        {% elif 'Dal Makhani' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe" class="food-image" alt="{{ item.name }}">
+                        {% elif 'Surf and Turf' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1633436375795-12b3b339712f" class="food-image" alt="{{ item.name }}">
+                        {% elif 'Salad' in item.name %}
+                            {% if 'Caesar' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1550304943-4f24f54ddde9" class="food-image" alt="{{ item.name }}">
+                            {% else %}
+                            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd" class="food-image" alt="{{ item.name }}">
+                            {% endif %}
+                        {% elif 'Chocolate' in item.name or 'Lava' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb" class="food-image" alt="{{ item.name }}">
+                        {% elif 'Smoothie' in item.name %}
+                            <img src="https://images.unsplash.com/photo-1638176066666-ffb2f013c7dd" class="food-image" alt="{{ item.name }}">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" class="food-image" alt="{{ item.name }}">
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <!-- Food Quotes Carousel -->
+                <div id="foodQuotesCarousel" class="carousel slide mt-5" data-bs-ride="carousel" data-bs-interval="4000">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="quote-container p-4">
+                                <p class="quote-text">"Food is not just eating energy. It's an experience."</p>
+                                <p class="quote-author">- Guy Fieri</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="quote-container p-4">
+                                <p class="quote-text">"One cannot think well, love well, sleep well, if one has not dined well."</p>
+                                <p class="quote-author">- Virginia Woolf</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="quote-container p-4">
+                                <p class="quote-text">"Food is our common ground, a universal experience."</p>
+                                <p class="quote-author">- James Beard</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="quote-container p-4">
+                                <p class="quote-text">"Cooking is like love. It should be entered into with abandon or not at all."</p>
+                                <p class="quote-author">- Harriet Van Horne</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#foodQuotesCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#foodQuotesCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                
+                <style>
+                    .quote-container {
+                        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+                        border-radius: 15px;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                        border: 1px solid rgba(0,0,0,0.05);
+                        transition: transform 0.3s ease;
+                    }
+                    .quote-container:hover {
+                        transform: translateY(-2px);
+                    }
+                    .quote-text {
+                        font-size: 1.2rem;
+                        font-style: italic;
+                        color: #2c3e50;
+                        margin-bottom: 0.8rem;
+                        line-height: 1.6;
+                        font-weight: 500;
+                    }
+                    .quote-author {
+                        font-size: 1rem;
+                        color: #7f8c8d;
+                        text-align: right;
+                        margin-bottom: 0;
+                        font-weight: 500;
+                    }
+                    .carousel {
+                        margin: 30px 0;
+                        padding: 0 20px;
+                    }
+                    .carousel-control-prev,
+                    .carousel-control-next {
+                        width: 8%;
+                        opacity: 0.8;
+                    }
+                    .carousel-control-prev:hover,
+                    .carousel-control-next:hover {
+                        opacity: 1;
+                    }
+                    .carousel-control-prev-icon,
+                    .carousel-control-next-icon {
+                        background-color: rgba(0,0,0,0.3);
+                        border-radius: 50%;
+                        padding: 15px;
+                    }
+                    .carousel-indicators {
+                        bottom: -30px;
+                    }
+                    .carousel-indicators button {
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                        margin: 0 5px;
+                    }
+                </style>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h1 class="mb-2">{{ item.name }}</h1>
+            <p class="text-muted mb-3">{{ item.category.name }}</p>
+            <h3 class="card-price mb-4">₹{{ item.price }}</h3>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Description</h5>
+                    <p>{{ item.description }}</p>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Quantity</h5>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" type="button" id="decrement">-</button>
+                        <input type="number" class="item-quantity text-center" id="quantity" value="1" min="1">
+                        <button class="quantity-btn" type="button" id="increment">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2">
+                <button id="add-to-cart" class="btn btn-primary" data-id="{{ item.id }}" data-name="{{ item.name }}" data-price="{{ item.price }}">
+                    Add to Cart
+                </button>
+                <a href="{% url 'menu' %}" class="btn btn-outline">Back to Menu</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#increment').click(function() {
+            const quantity = parseInt($('#quantity').val());
+            $('#quantity').val(quantity + 1);
+        });
+        
+        $('#decrement').click(function() {
+            const quantity = parseInt($('#quantity').val());
+            if (quantity > 1) {
+                $('#quantity').val(quantity - 1);
+            }
+        });
+        
+        $('#add-to-cart').click(function() {
+            const itemId = $(this).data('id');
+            const itemName = $(this).data('name');
+            const itemPrice = $(this).data('price');
+            const quantity = parseInt($('#quantity').val());
+            
+            // Get existing cart from localStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            // Add or increment item in cart
+            if (cart[itemId]) {
+                cart[itemId].quantity += quantity;
+            } else {
+                cart[itemId] = {
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: quantity
+                };
+            }
+            
+            // Save updated cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count in navbar
+            updateCartCount();
+            
+            // Show alert
+            alert(`${quantity} ${itemName}(s) added to cart!`);
+        });
+        
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || {};
+            let count = 0;
+            
+            for (const id in cart) {
+                count += cart[id].quantity;
+            }
+            
+            $('#cart-count').text(count);
+        }
+        
+        // Initialize cart count
+        updateCartCount();
+    });
+</script>
+{% endblock %}
